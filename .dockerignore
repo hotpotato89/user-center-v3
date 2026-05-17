@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Виртуальное окружение
+venv/
+.venv/
+env/
+ENV/
+
+# Переменные окружения (секреты)
+.env
+!.env.example
+
+# Логи
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Тесты
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Базы данных (локальные файлы)
+*.db
+*.sqlite
+*.sqlite3
+
+# Временные файлы
+*.tmp
+*.bak
+*.orig
+*.pid
+
+# Документация
+README.md
+LICENSE
