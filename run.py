@@ -1,11 +1,25 @@
 from fastapi import FastAPI
 import uvicorn
+from contextlib import asynccontextmanager
 
 from app.core.config import settings
+from app.core.database import create_connection, init_db
 
 from app.api.health import router as health_router
 
-app = FastAPI(title='User Center V3')
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    app.state.pool = await create_connection()
+    await init_db(app.state.pool)
+
+    yield
+
+    await app.state.pool.close()
+
+
+
+app = FastAPI(title='User Center V3', lifespan=lifespan)
 
 app.include_router(health_router)
 
