@@ -1,6 +1,6 @@
 import asyncpg
 
-from app.schemas.returnschema import ReturnForm
+from app.schemas.common import ReturnForm
 
 async def get_users_service(pool: asyncpg.Pool) -> ReturnForm:
     async with pool.acquire() as conn:
