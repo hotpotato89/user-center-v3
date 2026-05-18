@@ -6,6 +6,7 @@ from app.core.config import settings
 from app.core.database import create_connection, init_db
 
 from app.api.health import router as health_router
+from app.api.users import router as users_router
 
 
 @asynccontextmanager
@@ -22,6 +23,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title='User Center V3', lifespan=lifespan)
 
 app.include_router(health_router)
+app.include_router(users_router)
 
 if __name__ == '__main__':
     uvicorn.run(
