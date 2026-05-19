@@ -12,8 +12,8 @@ router = APIRouter()
 
 @router.get('/users')
 async def get_users(pool: Annotated[Pool, Depends(get_pool)],
-                    limit: int = Query(..., ge=1, description='Лимит записей в одной странице'),
-                    page: int = Query(..., ge=1, description='Какая страница будет просмотрена')):
+                    limit: int = Query(10, ge=1, description='Лимит записей в одной странице'),
+                    page: int = Query(1, ge=1, description='Какая страница будет просмотрена')):
     limit = min(limit, 50)
     skip = (page-1)*limit
 
