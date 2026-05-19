@@ -1,3 +1,5 @@
+import pytest
+
 def test_health(client):
     """Healthcheck для API"""
     response = client.get('/health')
