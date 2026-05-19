@@ -17,7 +17,7 @@ class UserIdForm(BaseModel):
 class UserDataForm(BaseModel):
     name: str = Field(..., min_length=1,  max_length=60, description='Имя пользователя')
     age: int = Field(..., ge=1, le=120, description='Возраст пользователя')
-    email: EmailStr = Field(..., max_length=45, description='Email пользователя')
+    email: EmailStr = Field(..., max_length=150, description='Email пользователя')
 
     @field_validator('email')
     @classmethod
