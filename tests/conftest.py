@@ -23,7 +23,7 @@ def password():
     }
 
 @pytest.fixture()
-def test_user():
+def fake_user():
     return {
         'name': fake.first_name(),
         'age': randint(1, 120),
