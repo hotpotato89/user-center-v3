@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     db_user: str
     db_password: str
 
+    admin_password: str
+
     model_config = {
         'env_file': '.env',
         'extra': 'ignore',
