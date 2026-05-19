@@ -16,3 +16,10 @@ async def test_get_users(session, url):
         data = await resp.json()
         assert data['success'] == True
         assert 'data' in data
+
+@pytest.mark.asyncio
+async def test_get_users_empty(session, url, password):
+    async with session.delete(f'{url}/clear', json=password) as resp:
+        assert resp.status == 200
+    async with session.get(f'{url}/users?limit=1&page=1') as resp:
+        assert resp.status == 404
