@@ -18,7 +18,9 @@ def url():
 
 @pytest.fixture()
 def password():
-    return settings.admin_password
+    return {
+        'password': settings.admin_password
+    }
 
 @pytest.fixture()
 def test_user():
