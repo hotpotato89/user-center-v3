@@ -21,6 +21,11 @@ async def test_add_user_conflict_error(session, url, fake_user):
         assert 'уже существует' in data['detail']
 
 @pytest.mark.asyncio
+async def test_add_user_validate_error(session, url):
+    async with session.post(f'{url}/add_user') as resp:
+        assert resp.status == 422
+
+@pytest.mark.asyncio
 async def test_get_users(session, url):
     async with session.get(f'{url}/users?limit=1&page=1') as resp:
         assert resp.status == 200
@@ -49,3 +54,8 @@ async def test_clear_db_unauthorized_error(session, url):
     }
     async with session.delete(f'{url}/clear', json=wrong) as resp:
         assert resp.status == 401
+
+@pytest.mark.asyncio
+async def test_clear_db_validate_error(session, url):
+    async with session.delete(f'{url}/clear') as resp:
+        assert resp.status == 422
