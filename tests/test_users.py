@@ -10,7 +10,7 @@ async def test_add_user(session, url, fake_user):
         assert 'id' in data
 
 @pytest.mark.asyncio
-async def test_add_user_conflict(session, url, fake_user):
+async def test_add_user_conflict_error(session, url, fake_user):
     user = fake_user
 
     async with session.post(f'{url}/add_user', json=user) as resp:
@@ -34,3 +34,18 @@ async def test_get_users_empty(session, url, password):
         assert resp.status == 200
     async with session.get(f'{url}/users?limit=1&page=1') as resp:
         assert resp.status == 404
+
+@pytest.mark.asyncio
+async def test_clear_db(session, url, password):
+    async with session.delete(f'{url}/clear', json=password) as resp:
+        assert resp.status == 200
+        data = await resp.json()
+        assert 'Удалено' in data['message']
+
+@pytest.mark.asyncio
+async def test_clear_db_unauthorized_error(session, url):
+    wrong = {
+        'password': 'wrong-password'
+    }
+    async with session.delete(f'{url}/clear', json=wrong) as resp:
+        assert resp.status == 401
