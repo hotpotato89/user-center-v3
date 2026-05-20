@@ -1,15 +1,20 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 import uvicorn
 from contextlib import asynccontextmanager
-from redis.asyncio import Redis
+from typing import Callable
+from time import perf_counter
 
 from app.core.config import settings
 from app.core.database import create_connection, init_db
 from app.core.redis_client import create_redis
 
+from app.utils.logger import get_logger
+
 from app.api.health import router as health_router
 from app.api.users import router as users_router
 from app.api.stats import router as stats_router
+
+logger = get_logger(__name__)
 
 
 @asynccontextmanager
@@ -28,6 +33,15 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title='User Center V3', lifespan=lifespan)
+
+@app.middleware('http')
+async def log_slow_request(request: Request, call_next: Callable):
+    start_time = perf_counter()
+    result = await call_next(request)
+    duration = perf_counter() - start_time
+    if duration > 0.7:
+        logger.warning(f'Slow request: {duration:0.2f}')
+    return result
 
 app.include_router(health_router)
 app.include_router(users_router)
