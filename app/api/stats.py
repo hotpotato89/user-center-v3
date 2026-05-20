@@ -6,7 +6,7 @@ from app.services.stats_services import get_stats_service
 
 from app.api.deps import get_pool
 
-router = APIRouter()
+router = APIRouter(tags=['Stats'])
 
 @router.get('/stats')
 async def stats_page(pool: Annotated[Pool, Depends(get_pool)]):

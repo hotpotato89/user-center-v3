@@ -8,7 +8,7 @@ from app.schemas.users_schemas import UserDataForm, PasswordForm, DeleteUserForm
 
 from app.api.deps import get_pool
 
-router = APIRouter()
+router = APIRouter(tags=['Users'])
 
 @router.get('/users')
 async def get_users(pool: Annotated[Pool, Depends(get_pool)],
