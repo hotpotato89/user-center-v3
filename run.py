@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 import uvicorn
 from contextlib import asynccontextmanager
+from redis.asyncio import Redis
 
 from app.core.config import settings
 from app.core.database import create_connection, init_db
+from app.core.redis_client import create_redis
 
 from app.api.health import router as health_router
 from app.api.users import router as users_router
@@ -15,8 +17,12 @@ async def lifespan(app: FastAPI):
     app.state.pool = await create_connection()
     await init_db(app.state.pool)
 
+    app.state.redis = await create_redis()
+    await app.state.redis.ping() #type: ignore
+
     yield
 
+    await app.state.redis.close()
     await app.state.pool.close()
 
 
