@@ -92,3 +92,26 @@ async def test_delete_user_unknown_error(session, url, password):
 async def test_delete_user_validation_error(session, url):
     async with session.delete(f'{url}/delete_user') as resp:
         assert resp.status == 422
+
+@pytest.mark.asyncio
+async def test_delete_user_unauthorized_error(session, url, fake_user, password):
+    async with session.post(f'{url}/add_user', json=fake_user) as resp:
+        assert resp.status == 200
+        user_data = await resp.json()
+        user_id = user_data['id']
+    wrong_delete_form = {
+        'id': user_id,
+        'password': 'wrong-password'
+    }
+    async with session.delete(f'{url}/delete_user', json=wrong_delete_form) as resp:
+        assert resp.status == 401
+        data = await resp.json()
+        assert 'Неверный' in data['detail']
+    
+    """Удаляем фейкового пользователя"""
+    delete_form = {
+        'id': user_id,
+        'password': password['password']
+    }
+    async with session.delete(f'{url}/delete_user', json=delete_form) as resp:
+        assert resp.status == 200
