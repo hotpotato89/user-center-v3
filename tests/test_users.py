@@ -88,6 +88,7 @@ async def test_delete_user_unknown_error(session, url, password):
         data = await resp.json()
         assert 'Нет' in data['detail']
 
+@pytest.mark.asyncio
 async def test_delete_user_validation_error(session, url):
     async with session.delete(f'{url}/delete_user') as resp:
         assert resp.status == 422
