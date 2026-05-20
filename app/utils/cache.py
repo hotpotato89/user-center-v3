@@ -15,6 +15,12 @@ def cache(ttl: int = 60):
                     break
             
             if not request:
+                for value in kwargs.values():
+                    if isinstance(value, Request):
+                        request = value
+                        break
+            
+            if not request:
                 return await func(*args, **kwargs)
             
             redis: Redis = request.app.state.redis
@@ -28,7 +34,7 @@ def cache(ttl: int = 60):
 
             if result:
                 data = result.dict() if hasattr(result, 'dict') else result
-                await redis.setex(cache_key, ttl, json.dumps(data))
+                await redis.setex(cache_key, ttl, json.dumps(data, default=str))
             
             return result
         return inner
