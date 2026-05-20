@@ -76,3 +76,18 @@ async def test_delete_user(session, url, password, fake_user):
         assert resp.status == 200
         data = await resp.json()
         assert 'Удален' in data['message']
+
+@pytest.mark.asyncio
+async def test_delete_user_unknown_error(session, url, password):
+    delete_form = {
+        'id': 2100000000,
+        'password': password['password']
+    }
+    async with session.delete(f'{url}/delete_user', json=delete_form) as resp:
+        assert resp.status == 404
+        data = await resp.json()
+        assert 'Нет' in data['detail']
+
+async def test_delete_user_validation_error(session, url):
+    async with session.delete(f'{url}/delete_user') as resp:
+        assert resp.status == 422
