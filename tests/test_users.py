@@ -62,6 +62,7 @@ async def test_clear_db_validate_error(session, url):
     async with session.delete(f'{url}/clear') as resp:
         assert resp.status == 422
 
+@pytest.mark.asyncio
 async def test_delete_user(session, url, password, fake_user):
     async with session.post(f'{url}/add_user', json=fake_user) as resp:
         assert resp.status == 200
