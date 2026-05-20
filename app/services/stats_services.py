@@ -2,7 +2,7 @@ import asyncpg
 
 from app.schemas.common import ReturnForm
 
-async def get_stats_service(pool):
+async def get_stats_service(pool: asyncpg.Pool):
     async with pool.acquire() as session:
         total_users = await session.fetchval('select count(*) from users')
         if total_users == 0:
