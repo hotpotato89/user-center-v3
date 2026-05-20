@@ -1,5 +1,7 @@
 import pytest
 
+from app.schemas.users_schemas import DeleteUserForm
+
 @pytest.mark.asyncio
 async def test_add_user(session, url, fake_user):
     async with session.post(f'{url}/add_user', json=fake_user) as resp:
@@ -59,3 +61,17 @@ async def test_clear_db_unauthorized_error(session, url):
 async def test_clear_db_validate_error(session, url):
     async with session.delete(f'{url}/clear') as resp:
         assert resp.status == 422
+
+async def test_delete_user(session, url, password, fake_user):
+    async with session.post(f'{url}/add_user', json=fake_user) as resp:
+        assert resp.status == 200
+        user_data = await resp.json()
+        user_id = user_data['id']
+    delete_form = {
+        'id': user_id,
+        'password': password['password']
+    }
+    async with session.delete(f'{url}/delete_user', json=delete_form) as resp:
+        assert resp.status == 200
+        data = await resp.json()
+        assert 'Удален' in data['message']
