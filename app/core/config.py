@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     db_user: str
     db_password: str
 
+    redis_url: str
+
     admin_password: str
 
     model_config = {
