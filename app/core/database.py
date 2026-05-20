@@ -2,11 +2,9 @@ import asyncpg
 
 from app.core.config import settings
 
-DSN = f'postgresql://{settings.db_user}:{settings.db_password}@db/{settings.db_name}'
-
 async def create_connection():
     """Создаем пул соединений"""
-    return await asyncpg.create_pool(DSN, min_size=2, max_size=10)
+    return await asyncpg.create_pool(settings.database_url, min_size=2, max_size=10)
 
 async def init_db(pool: asyncpg.Pool):
     """Инициализируем таблицу"""
