@@ -33,17 +33,22 @@ def cache(ttl: int = 60):
 
             cached = await redis.get(cache_key)
             if cached:
-                logger.info(f'Cache HIT: {cache_key}')
+                logger.info(f'Кэш HIT: {cache_key}')
                 return json.loads(cached)
             
             result = await func(*args, **kwargs)
-            logger.info(f'Cache MISS: {cache_key}')
+            logger.info(f'Кэш  MISS: {cache_key}')
 
             if result:
                 data = result.dict() if hasattr(result, 'dict') else result
                 await redis.setex(cache_key, ttl, json.dumps(data, default=str))
-                logger.info(f'Cache saved: {cache_key}')
+                logger.info(f'Кэш сохранен: {cache_key}')
             
             return result
         return inner
     return wrapper
+
+async def invalidate_cache(redis: Redis):
+    """Очищение кэша"""
+    await redis.flushall()
+    logger.info(f'Кэш очищен')
