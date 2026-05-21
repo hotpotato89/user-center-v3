@@ -8,6 +8,8 @@ from app.schemas.users_schemas import UserDataForm, PasswordForm, DeleteUserForm
 
 from app.api.deps import get_pool
 
+from app.utils.cache import invalidate_cache
+
 router = APIRouter(tags=['Users'])
 
 @router.get('/users')
@@ -28,10 +30,11 @@ async def get_users(request: Request,
 @router.post('/add_user')
 async def add_user(request: Request, pool: Annotated[Pool, Depends(get_pool)], user_data: UserDataForm):
     result = await add_user_service(pool, user_data)
-    if result.success != True:
+    if not result.success:
         if result.error_code == 'conflict':
             raise HTTPException(status_code=409, detail=result.message)
         raise HTTPException(status_code=500, detail=result.message)
+    await invalidate_cache(request.app.state.redis)
     return result
 
 @router.delete('/clear')
@@ -41,6 +44,7 @@ async def clear_all(request: Request, password: PasswordForm, pool = Depends(get
         if result.error_code == 'unauthorized':
             raise HTTPException(status_code=401, detail=result.message)
         raise HTTPException(status_code=500, detail=result.message)
+    await invalidate_cache(request.app.state.redis)
     return result
 
 @router.delete('/delete_user')
@@ -52,4 +56,5 @@ async def delete_user(request: Request, pool: Annotated[Pool, Depends(get_pool)]
         if result.error_code == 'unknown_user':
             raise HTTPException(status_code=404, detail=result.message)
         raise HTTPException(status_code=500, detail=result.message)
+    await invalidate_cache(request.app.state.redis)
     return result
