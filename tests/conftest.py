@@ -29,3 +29,10 @@ def fake_user():
         'age': randint(1, 120),
         'email': fake.email(),
     }
+
+@pytest.fixture(autouse=True)
+async def flush_redis(session, url):
+    """Специальная авто-фикстура для очистки кэша"""
+    await session.get(f'{url}/__flush__')
+    yield
+    await session.get(f'{url}/__flush__')
