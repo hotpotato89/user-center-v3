@@ -33,6 +33,8 @@ def fake_user():
 @pytest.fixture(autouse=True)
 async def flush_redis(session, url):
     """Специальная авто-фикстура для очистки кэша"""
-    await session.get(f'{url}/__flush__')
+    async with session.get(f'{url}/__flush__') as resp:
+        assert resp.status == 200
     yield
-    await session.get(f'{url}/__flush__')
+    async with session.get(f'{url}/__flush__') as resp:
+        assert resp.status == 200
