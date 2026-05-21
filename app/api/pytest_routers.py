@@ -3,7 +3,7 @@ from redis.asyncio import Redis
 
 from app.utils.cache import invalidate_cache
 
-ALLOWED_HOSTS = ['127.0.0.1', '::1', 'localhost', '172.17.0.1', '172.18.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', '::1', 'localhost', '172.17.0.1', '172.18.0.1', '172.19.0.1']
 
 router = APIRouter(tags=['Test'])
 

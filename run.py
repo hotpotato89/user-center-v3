@@ -19,6 +19,7 @@ from app.api.health import router as health_router
 from app.api.users import router as users_router
 from app.api.stats import router as stats_router
 from app.api.ui import router as ui_router
+from app.api.pytest_routers import router as test_router
 
 logger = get_logger(__name__)
 
@@ -59,6 +60,7 @@ app.include_router(health_router)
 app.include_router(users_router)
 app.include_router(stats_router)
 app.include_router(ui_router)
+app.include_router(test_router)
 
 if __name__ == '__main__':
     uvicorn.run(
