@@ -21,14 +21,18 @@ logger = get_logger(__name__)
 async def lifespan(app: FastAPI):
     app.state.pool = await create_connection()
     await init_db(app.state.pool)
+    logger.info('Пул соединений установлен')
 
     app.state.redis = await create_redis()
     await app.state.redis.ping() #type: ignore
+    logger.info('Соединение с Redis установлено')
 
     yield
 
     await app.state.redis.close()
+    logger.info('Соединение с Redis разорвано')
     await app.state.pool.close()
+    logger.info('Пул соединений разорван')
 
 
 
